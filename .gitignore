@@ -1,0 +1,52 @@
+# Byte-compiled / optimized Python files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python virtual environments (root and subfolders)
+.venv/
+venv/
+ENV/
+env/
+backend/.venv/
+backend/venv/
+
+# Environment variables & local secrets
+.env
+.env.local
+.env.*.local
+*.env
+# Keep the example configuration template tracked
+!.env.example
+
+# Pytest and coverage artifacts
+.pytest_cache/
+backend/.pytest_cache/
+.coverage
+htmlcov/
+*.coverage.*
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE and Editor configurations
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Future Frontend (React / Node.js) dependencies and build artifacts
+node_modules/
+dist/
+build/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local vector store data (ChromaDB)
+data/
+backend/data/
+chroma_data/
