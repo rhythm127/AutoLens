@@ -1,6 +1,12 @@
+from dotenv import load_dotenv
+
 import tempfile
 from pathlib import Path
 from typing import Any
+
+BACKEND_DIR = Path(__file__).resolve().parents[1]
+load_dotenv(BACKEND_DIR.parent / ".env", override=True)
+load_dotenv(BACKEND_DIR / ".env", override=True)
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile, Depends
 from fastapi.middleware.cors import CORSMiddleware

@@ -1,4 +1,4 @@
-"""Provider-neutral JSON transport with bounded timeouts and offline fallback."""
+"""Provider transport for conversational chat and structured image analysis."""
 import base64
 import json
 import os
@@ -91,7 +91,7 @@ class LLMClient:
                             "contents": [{"role": "user", "parts": parts}],
                             "generationConfig": {
                                 "temperature": 0.2,
-                                "responseMimeType": "application/json",
+                                **({"responseMimeType": "application/json"} if image else {}),
                             },
                         },
                         {"x-goog-api-key": os.environ["GEMINI_API_KEY"]},
@@ -107,13 +107,19 @@ class LLMClient:
                             "model": os.getenv("OLLAMA_MODEL", "llama3.2"),
                             "messages": messages,
                             "stream": False,
-                            "format": "json",
                             "options": {"temperature": 0},
                         },
                         timeout=3,
                     )
                     text = response["message"]["content"]
-                return parse_json(text)
+                if not isinstance(text, str) or not text.strip():
+                    raise ValueError("Empty model response")
+                try:
+                    return parse_json(text)
+                except ValueError:
+                    if image or text.lstrip().startswith(("{", "```json")):
+                        raise
+                    return {"reply": text.strip(), "covered": True}
             except HTTPError as exc:
                 err_body = exc.read().decode("utf-8", errors="ignore")[:300]
                 print(f"[LLMClient] {provider} HTTP {exc.code}: {err_body}")
